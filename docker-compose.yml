@@ -1,0 +1,49 @@
+version: "3.7"
+
+services:
+    ui:
+        container_name: ui
+        build: ui
+        volumes:
+            - ./ui:/app
+            - /app/node_modules
+        ports:
+            - 3000:3000
+        environment:
+            - NODE_ENV=development
+    api:
+        build: api
+        command: python manage.py runserver 0.0.0.0:8000
+        volumes:
+            - ./api:/code
+        ports:
+            - "8000:8000"
+        depends_on:
+            - db
+    # db:
+    #     image: postgres
+    #     volumes:
+    #         - ./data/db:/var/lib/postgresql/data
+    #     environment:
+    #         - POSTGRES_DB=postgres
+    #         - POSTGRES_USER=postgres
+    #         - POSTGRES_PASSWORD=postgres
+
+    # api:
+    #   container_name: api
+    #   build: api
+    #   volumes:
+    #       - ./api:/app
+    #   ports:
+    #       - 5000:5000
+    #   depends_on:
+    #       - database
+    # # command: ["dotnet", "watch", "run"]
+
+    db:
+        container_name: postgres
+        image: postgres
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_PASSWORD: go-fetch
